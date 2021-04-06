@@ -1,6 +1,6 @@
 const submitBtn = document.getElementById("btn");
 const grid = document.getElementById("grid");
-const form = document.getElementById('dino-compare');
+const form = document.getElementById("dino-compare");
 
 let getDinosData = async () => {
 	const data = await fetch("/dino.json");
@@ -21,14 +21,31 @@ let getDinosData = async () => {
 //     }
 // }
 
+//do some proto inheerit`nce herre
+// function being(diet, height, weight) {
+// 	this.diet = diet.toLowerCase();
+// 	this.height = height;
+// 	this.weight = weight;
+// }
+
+// Dino.prototype = Being
+
 function Dino(data) {
 	this.species = data.species;
-	this.diet = data.diet.toLowerCase(); //to ensure that both form data and dino data is the same register
+	this.diet = data.diet; //to ensure that both form data and dino data is the same register
 	this.fact = data.fact;
 	this.height = data.height * 0.3048; //feet top meters
 	this.weight = data.weight * 0.453592; //lb to kg
 	this.when = data.when;
 	this.where = data.where;
+}
+
+function Human(name, diet, height, weight) {
+	this.species = "human";
+	this.name = name;
+	this.diet = diet; //to ensure that both form data and dino data is the same register
+	this.height = height;
+	this.weight = weight;
 }
 
 Dino.prototype.compareWeight = function compareWeight(human) {
@@ -61,20 +78,54 @@ Dino.prototype.compareDiet = function compareDiet(human) {
 	}
 };
 
-getDinosData().then((res) => {
-	let dinos = res.map((dino) => new Dino(dino)); // consider function factories ?
-	//let dinos = res.map(dino => Object.create(dino));
-	console.log(dinos[0].compareDiet({ name: "luba", diet: "herbavor" }));
-	return dinos;
-});
+Dino.prototype.getRandomFact = function getRandomFact(human) {
+	let facts = [
+		`${this.species} lived in ${this.where}`,
+		`${this.species} lived during ${this.when} Period`,
+		this.fact,
+		this.compareDiet(human),
+		this.compareHeight(human),
+		this.compareWeight(human),
+	];
+    console.log(Math.random() * (facts.length - 1));
+	return facts[Math.round(Math.random() * (facts.length - 1))];
+};
 
-submitBtn.addEventListener('click', function() {
-    
-})
+function getHumanData() {
+	return {
+		name: document.getElementById("name").value,
+		diet: document.getElementById("diet").value,
+		weight: Number(document.getElementById("weight").value),
+		height:
+			Number(document.getElementById("meters").value) +
+			0.01 * Number(document.getElementById("cm").value),
+	};
+}
+
+form.addEventListener("submit", function (e) {
+	// Use IIFE to get human data from form (??) why??
+	e.preventDefault();
+	let human = getHumanData();
+	let humanBeing = new Human(
+		human.name,
+		human.diet,
+		human.height,
+		human.weight
+	);
+	console.log(human);
+	console.log(humanBeing);
+
+	getDinosData().then((res) => {
+		let dinos = res.map((dino) => new Dino(dino)); // consider function factories ?s
+
+		//console.log(dinos[0].getRandomFact(human));
+		return dinos;
+	});
+});
 
 // Create Human Object
 
-// Use IIFE to get human data from form (??)
+
 
 // Generate Tiles for each Dino in Array
 // how to generate tiles:
