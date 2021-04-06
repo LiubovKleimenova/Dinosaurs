@@ -111,7 +111,7 @@ form.addEventListener("submit", function (e) {
 	getDinosData().then((res) => {
 		let dinos = res.map(
 			(dino) => new Dino(dino.species, dino.diet, dino.height, dino.weight, dino.fact, dino.when, dino.where)
-		); 
+		);
 	});
 
     toggleScreen();
