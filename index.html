@@ -25,12 +25,12 @@
 
              LABELS!!!!!
             <p>Name:</p>
-            <input id="name" class="form-field__full" type="name" name="name">
+            <input id="name" class="form-field__full" type="name" name="name" required>
             <p>Height</p>
-            <label>m: <input id="meters" class="form-field__short" type="number" name="meters"></label>
+            <label>m: <input id="meters" class="form-field__short" type="number" name="meters" required></label>
             <label>cm: <input id="cm" class="form-field__short" type="number" name="cm"></label>
             <p>Weight:</p>
-            <label><input id="weight" class="form-field__full" type="number" name="weight">kg</label>
+            <label><input id="weight" class="form-field__full" type="number" name="weight" required>kg</label>
             <p>Diet:</p>
 
             PROPER VALUES
@@ -43,7 +43,7 @@
         </div>
     </form>
     <!-- .grid to attach tiles to -->
-    <main id="grid"></main>
+    <main id="grid" class="hide grid">GRID</main>
     <footer>
         <!-- Include information source -->
         <p class="fine-print">Data Sourced from <a href="https://www.wikipedia.org/">Wikipedia.org</a>, all numbers are approximations.</p>

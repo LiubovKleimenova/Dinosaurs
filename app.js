@@ -1,34 +1,7 @@
 const submitBtn = document.getElementById("btn");
-const grid = document.getElementById("grid");
 const form = document.getElementById("dino-compare");
 
-let getDinosData = async () => {
-	const data = await fetch("/dino.json");
-	const dinoData = await data.json();
-	return dinoData.Dinos;
-};
 
-// es6 syntax
-// class Dino {
-//     constructor(data) {
-//         this.species = data.species;
-//         this.diet = data.diet;
-//         this.fact = data.fact;
-//         this.height = data.height;
-//         this.weight = data.height;
-//         this.when = data.when;
-//         this.where = data.where;
-//     }
-// }
-
-//do some proto inheerit`nce herre
-// function being(diet, height, weight) {
-// 	this.diet = diet.toLowerCase();
-// 	this.height = height;
-// 	this.weight = weight;
-// }
-
-// Dino.prototype = Being
 class Being {
     constructor(species, diet, height, weight) {
         this.species = species;
@@ -40,7 +13,7 @@ class Being {
 
 class Dino extends Being {
 	constructor(species, diet, height, weight, fact, when, where) {
-		super(species, diet, height * 0.3048, weight * 0.453592);
+		super(species, diet, height * 0.3048, weight * 0.453592); //coefficients are to turn lb to kg, feet to m
 		this.fact = fact;
 		this.when = when;
 		this.where = where;
@@ -53,24 +26,6 @@ class Human extends Being {
         this.name = name;
 	}
 }
-
-// function Dino(data) {
-// 	this.species = data.species;
-// 	this.diet = data.diet; //to ensure that both form data and dino data is the same register
-// 	this.fact = data.fact;
-// 	this.height = data.height * 0.3048; //feet top meters
-// 	this.weight = data.weight * 0.453592; //lb to kg
-// 	this.when = data.when;
-// 	this.where = data.where;
-// }
-
-// function Human(name, diet, height, weight) {
-// 	this.species = "human";
-// 	this.name = name;
-// 	this.diet = diet; //to ensure that both form data and dino data is the same register
-// 	this.height = height;
-// 	this.weight = weight;
-// }
 
 Dino.prototype.compareWeight = function compareWeight(human) {
 	ratio = this.weight / human.weight;
@@ -111,11 +66,17 @@ Dino.prototype.getRandomFact = function getRandomFact(human) {
 		this.compareHeight(human),
 		this.compareWeight(human),
 	];
-    console.log(Math.random() * (facts.length - 1));
 	return facts[Math.round(Math.random() * (facts.length - 1))];
 };
 
-function getHumanData() {
+
+async function getDinosData() {
+	const data = await fetch("/dino.json");
+	const dinoData = await data.json();
+	return dinoData.Dinos;
+};
+
+function getHumanData() { //make IIFE instead
 	return {
 		name: document.getElementById("name").value,
 		diet: document.getElementById("diet").value,
@@ -124,6 +85,13 @@ function getHumanData() {
 			Number(document.getElementById("meters").value) +
 			0.01 * Number(document.getElementById("cm").value),
 	};
+}
+
+function toggleScreen() {
+    
+    const grid = document.getElementById("grid");
+    form.classList.add('hide');
+    grid.classList.remove('hide');
 }
 
 form.addEventListener("submit", function (e) {
@@ -136,17 +104,17 @@ form.addEventListener("submit", function (e) {
 		human.height,
 		human.weight
 	);
-	console.log(human);
-	console.log(humanBeing);
+
+    let pigeon = new Being("bird", "herbivor", 1, 5);
+    pigeon.fact = 'All birds are dinosaurus'
 
 	getDinosData().then((res) => {
 		let dinos = res.map(
 			(dino) => new Dino(dino.species, dino.diet, dino.height, dino.weight, dino.fact, dino.when, dino.where)
-		); // consider function factories ?s
-
-		console.log(dinos[0].getRandomFact(human));
-		return dinos;
+		); 
 	});
+
+    toggleScreen();
 });
 
 // Create Human Object

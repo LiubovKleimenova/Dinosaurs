@@ -7,6 +7,11 @@ body {
     min-height: 100vh;
 }
 
+
+body .hide {
+    display: none;
+}
+
 h1 {
     margin: 0;
     font-family: 'Frijole', cursive;
@@ -36,7 +41,7 @@ p {
 }
 
 /* Grid Styles */
-#grid {
+.grid {
     background: #fff url(images/tracks.png) no-repeat;
     background-size: cover;
     display: flex;
