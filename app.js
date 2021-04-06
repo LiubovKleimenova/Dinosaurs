@@ -29,24 +29,48 @@ let getDinosData = async () => {
 // }
 
 // Dino.prototype = Being
-
-function Dino(data) {
-	this.species = data.species;
-	this.diet = data.diet; //to ensure that both form data and dino data is the same register
-	this.fact = data.fact;
-	this.height = data.height * 0.3048; //feet top meters
-	this.weight = data.weight * 0.453592; //lb to kg
-	this.when = data.when;
-	this.where = data.where;
+class Being {
+    constructor(species, diet, height, weight) {
+        this.species = species;
+        this.diet = diet.toLowerCase();
+        this.height = height;
+        this.weight = weight;
+    }
 }
 
-function Human(name, diet, height, weight) {
-	this.species = "human";
-	this.name = name;
-	this.diet = diet; //to ensure that both form data and dino data is the same register
-	this.height = height;
-	this.weight = weight;
+class Dino extends Being {
+	constructor(species, diet, height, weight, fact, when, where) {
+		super(species, diet, height * 0.3048, weight * 0.453592);
+		this.fact = fact;
+		this.when = when;
+		this.where = where;
+	}
 }
+
+class Human extends Being {
+	constructor(name, diet, height, weight) {
+		super('human', diet, height, weight);
+        this.name = name;
+	}
+}
+
+// function Dino(data) {
+// 	this.species = data.species;
+// 	this.diet = data.diet; //to ensure that both form data and dino data is the same register
+// 	this.fact = data.fact;
+// 	this.height = data.height * 0.3048; //feet top meters
+// 	this.weight = data.weight * 0.453592; //lb to kg
+// 	this.when = data.when;
+// 	this.where = data.where;
+// }
+
+// function Human(name, diet, height, weight) {
+// 	this.species = "human";
+// 	this.name = name;
+// 	this.diet = diet; //to ensure that both form data and dino data is the same register
+// 	this.height = height;
+// 	this.weight = weight;
+// }
 
 Dino.prototype.compareWeight = function compareWeight(human) {
 	ratio = this.weight / human.weight;
@@ -116,9 +140,11 @@ form.addEventListener("submit", function (e) {
 	console.log(humanBeing);
 
 	getDinosData().then((res) => {
-		let dinos = res.map((dino) => new Dino(dino)); // consider function factories ?s
+		let dinos = res.map(
+			(dino) => new Dino(dino.species, dino.diet, dino.height, dino.weight, dino.fact, dino.when, dino.where)
+		); // consider function factories ?s
 
-		//console.log(dinos[0].getRandomFact(human));
+		console.log(dinos[0].getRandomFact(human));
 		return dinos;
 	});
 });
