@@ -28,7 +28,7 @@ class Human extends Being {
 }
 
 Dino.prototype.compareWeight = function compareWeight(human) {
-	ratio = this.weight / human.weight;
+	ratio = (this.weight / human.weight).toFixed(1);
 	if (ratio > 1) {
 		return `${this.species} is ${ratio} times heavier than ${human.name}`;
 	} else if (ratio < 1) {
@@ -39,7 +39,7 @@ Dino.prototype.compareWeight = function compareWeight(human) {
 };
 
 Dino.prototype.compareHeight = function compareHeight(human) {
-	ratio = this.height / human.height;
+	ratio = (this.height / human.height).toFixed(1);
 	if (ratio > 1) {
 		return `${this.species} is ${ratio} times taller than ${human.name}`;
 	} else if (ratio < 1) {
