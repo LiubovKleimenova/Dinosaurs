@@ -100,7 +100,9 @@ function generateTile(animal, human) {
 
 	name.innerHTML = animal instanceof Dino ? animal.species : animal.name; // name for human, species for other
 	fact.innerHTML =
-		animal.species !== "Pigeon" ? animal.getRandomFact(human) : animal.fact; // random for dinos, single for pegion
+		animal instanceof Dino && animal.species !== "Pigeon"
+			? animal.getRandomFact(human)
+			: animal.fact; // random for dinos, single for pigeon 
 	image.setAttribute("src", `/images/${animal.species}.png`);
 	image.setAttribute("alt", animal.species);
 
