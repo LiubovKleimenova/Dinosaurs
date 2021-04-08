@@ -75,17 +75,17 @@ async function getDinosData() {
 	return dinoData.Dinos;
 }
 
-function getHumanData() {
-	//make IIFE instead
-	return {
-		name: document.getElementById("name").value,
-		diet: document.getElementById("diet").value,
-		weight: Number(document.getElementById("weight").value),
-		height:
-			Number(document.getElementById("meters").value) +
-			0.01 * Number(document.getElementById("cm").value),
-	};
-}
+// function getHumanData() {
+// 	//make IIFE instead
+// 	return {
+// 		name: document.getElementById("name").value,
+// 		diet: document.getElementById("diet").value,
+// 		weight: Number(document.getElementById("weight").value),
+// 		height:
+// 			Number(document.getElementById("meters").value) +
+// 			0.01 * Number(document.getElementById("cm").value),
+// 	};
+// }
 
 function toggleScreen() {
 	form.classList.add("hide");
@@ -102,7 +102,7 @@ function generateTile(animal, human) {
 	fact.innerHTML =
 		animal instanceof Dino && animal.species !== "Pigeon"
 			? animal.getRandomFact(human)
-			: animal.fact; // random for dinos, single for pigeon 
+			: animal.fact; // random for dinos, single for pigeon
 	image.setAttribute("src", `/images/${animal.species}.png`);
 	image.setAttribute("alt", animal.species);
 
@@ -118,12 +118,22 @@ function generateTile(animal, human) {
 form.addEventListener("submit", function (e) {
 	// Use IIFE to get human data from form (??) why??
 	e.preventDefault();
-	let human = getHumanData();
-	let humanBeing = new Human(
-		human.name,
-		human.diet,
-		human.height,
-		human.weight
+	let humanData = (function() {
+		return {
+			name: document.getElementById("name").value,
+			diet: document.getElementById("diet").value,
+			weight: Number(document.getElementById("weight").value),
+			height:
+				Number(document.getElementById("meters").value) +
+				0.01 * Number(document.getElementById("cm").value),
+		};
+	})();
+
+	let human = new Human(
+		humanData.name,
+		humanData.diet,
+		humanData.height,
+		humanData.weight
 	);
 
 	getDinosData().then((res) => {
@@ -140,8 +150,8 @@ form.addEventListener("submit", function (e) {
 				)
 		);
 
-		dinos.forEach((dino) => generateTile(dino, humanBeing));
-		generateTile(humanBeing, humanBeing);
+		dinos.forEach((dino) => generateTile(dino, human));
+		generateTile(human, human);
 	});
 
 	toggleScreen();
