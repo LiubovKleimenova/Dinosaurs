@@ -74,22 +74,27 @@ p {
 
 .grid-item:nth-child(5){
     background: #67a866f9;
+    order: 6;
 }
 
 .grid-item:nth-child(6){
     background: #b94169fa;
+    order: 7;
 }
 
 .grid-item:nth-child(7){
     background: #7f62b3fa;
+    order: 8;
 }
 
 .grid-item:nth-child(8){
     background: #9fc376f9;
+    order: 9;
 }
 
 .grid-item:nth-child(9){
     background: #677bcbfa;
+    order: 5;
 }
 
 @media (min-width: 550px) {

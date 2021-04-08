@@ -1,14 +1,14 @@
 const submitBtn = document.getElementById("btn");
 const form = document.getElementById("dino-compare");
-
+const grid = document.getElementById("grid");
 
 class Being {
-    constructor(species, diet, height, weight) {
-        this.species = species;
-        this.diet = diet.toLowerCase();
-        this.height = height;
-        this.weight = weight;
-    }
+	constructor(species, diet, height, weight) {
+		this.species = species;
+		this.diet = diet.toLowerCase();
+		this.height = height;
+		this.weight = weight;
+	}
 }
 
 class Dino extends Being {
@@ -22,8 +22,8 @@ class Dino extends Being {
 
 class Human extends Being {
 	constructor(name, diet, height, weight) {
-		super('human', diet, height, weight);
-        this.name = name;
+		super("human", diet, height, weight);
+		this.name = name;
 	}
 }
 
@@ -69,14 +69,14 @@ Dino.prototype.getRandomFact = function getRandomFact(human) {
 	return facts[Math.round(Math.random() * (facts.length - 1))];
 };
 
-
 async function getDinosData() {
 	const data = await fetch("/dino.json");
 	const dinoData = await data.json();
 	return dinoData.Dinos;
-};
+}
 
-function getHumanData() { //make IIFE instead
+function getHumanData() {
+	//make IIFE instead
 	return {
 		name: document.getElementById("name").value,
 		diet: document.getElementById("diet").value,
@@ -88,10 +88,29 @@ function getHumanData() { //make IIFE instead
 }
 
 function toggleScreen() {
-    
-    const grid = document.getElementById("grid");
-    form.classList.add('hide');
-    grid.classList.remove('hide');
+	form.classList.add("hide");
+	grid.classList.remove("hide");
+}
+
+function generateTile(animal, human) {
+	let tile = document.createElement("div");
+	let name = document.createElement("h3");
+	let image = document.createElement("img");
+	let fact = document.createElement("p");
+
+	name.innerHTML = animal instanceof Dino ? animal.species : animal.name; // name for human, species for other
+	fact.innerHTML =
+		animal.species !== "Pigeon" ? animal.getRandomFact(human) : animal.fact; // random for dinos, single for pegion
+	image.setAttribute("src", `/images/${animal.species}.png`);
+	image.setAttribute("alt", animal.species);
+
+	tile.classList.add("grid-item");
+	tile.appendChild(name);
+	tile.appendChild(image);
+	if (animal instanceof Dino) {
+		tile.appendChild(fact); // do nor append fact to human tile
+	}
+	grid.appendChild(tile);
 }
 
 form.addEventListener("submit", function (e) {
@@ -105,36 +124,23 @@ form.addEventListener("submit", function (e) {
 		human.weight
 	);
 
-    let pigeon = new Being("bird", "herbivor", 1, 5);
-    pigeon.fact = 'All birds are dinosaurus'
-
 	getDinosData().then((res) => {
 		let dinos = res.map(
-			(dino) => new Dino(dino.species, dino.diet, dino.height, dino.weight, dino.fact, dino.when, dino.where)
+			(dino) =>
+				new Dino(
+					dino.species,
+					dino.diet,
+					dino.height,
+					dino.weight,
+					dino.fact,
+					dino.when,
+					dino.where
+				)
 		);
+
+		dinos.forEach((dino) => generateTile(dino, humanBeing));
+		generateTile(humanBeing, humanBeing);
 	});
 
-    toggleScreen();
+	toggleScreen();
 });
-
-// Create Human Object
-
-
-
-// Generate Tiles for each Dino in Array
-// how to generate tiles:
-
-// DONT Hardcode tiles
-// 1. create array of 9 with human, pigeon and 7 random dinos? hor to order?
-// 2. create an html layout with human tile in the center and spots for 8 dino tiles?
-
-// Add tiles to DOM
-
-// Remove form from screen
-
-// On button click, prepare and display infographic
-
-// Add a submit event listener to the dino-compare form. Try to console.log the dinos data when the form is submitted.
-// On form submit: hide the form and show the grid (you can get their ids from the HTML code). 'display: none;' is a good CSS property to use here.
-// On form submit: loop through the dinos list and create an instance of the constructor/class for each entry. It will be used to create the tiles later. Log that new list.
-// On form submit: get the data from the form. There is a number of ways to do it, but every input has an id and makes it easier to use getElementById.
