@@ -1,6 +1,8 @@
-const form = document.getElementById('dino-compare');
-const grid = document.getElementById('grid');
-const backBtn = document.getElementById('back-btn');
+const form = document.getElementById("dino-compare");
+const grid = document.getElementById("grid");
+const backBtn = document.getElementById("back-btn");
+const WEIGHT_COEFFICIENT = 0.453592;
+const HEIGHT_COEFFICIENT = 0.3048;
 
 class Being {
 	constructor(species, diet, height, weight) {
@@ -13,7 +15,12 @@ class Being {
 
 class Dino extends Being {
 	constructor(species, diet, height, weight, fact, when, where) {
-		super(species, diet, height * 0.3048, weight * 0.453592); // coefficients are to turn lb to kg, feet to m
+		super(
+			species,
+			diet,
+			height * HEIGHT_COEFFICIENT,
+			weight * WEIGHT_COEFFICIENT
+		);
 		this.fact = fact;
 		this.when = when;
 		this.where = where;
@@ -22,7 +29,7 @@ class Dino extends Being {
 
 class Human extends Being {
 	constructor(name, diet, height, weight) {
-		super('human', diet, height, weight);
+		super("human", diet, height, weight);
 		this.name = name;
 	}
 }
@@ -50,11 +57,9 @@ Dino.prototype.compareHeight = function compareHeight(human) {
 };
 
 Dino.prototype.compareDiet = function compareDiet(human) {
-	if (this.diet === human.diet) {
-		return `${this.species} is ${this.diet} just like ${human.name}`;
-	} else {
-		return `${this.species} is ${this.diet} unlike ${human.name}`;
-	}
+	return this.diet === human.diet
+		? `${this.species} is ${this.diet} just like ${human.name}`
+		: `${this.species} is ${this.diet} unlike ${human.name}`;
 };
 
 Dino.prototype.getRandomFact = function getRandomFact(human) {
@@ -70,51 +75,51 @@ Dino.prototype.getRandomFact = function getRandomFact(human) {
 };
 
 async function getDinosData() {
-	const data = await fetch('/dino.json');
+	const data = await fetch("/dino.json");
 	const dinoData = await data.json();
 	return dinoData.Dinos;
 }
 
 function toggleScreen() {
-	form.classList.toggle('hide');
-	grid.classList.toggle('hide');
-	backBtn.classList.toggle('hide');
+	form.classList.toggle("hide");
+	grid.classList.toggle("hide");
+	backBtn.classList.toggle("hide");
 }
 
 function generateTile(animal, human) {
-	let tile = document.createElement('div');
-	let name = document.createElement('h3');
-	let image = document.createElement('img');
-	let fact = document.createElement('p');
+	let tile = document.createElement("div");
+	let name = document.createElement("h3");
+	let image = document.createElement("img");
+	let fact = document.createElement("p");
 
-	name.innerHTML = animal instanceof Dino ? animal.species : animal.name; // name for human, species for other
+	name.innerHTML = animal instanceof Dino ? animal.species : animal.name;
 	fact.innerHTML =
-		animal instanceof Dino && animal.species !== 'Pigeon'
+		animal instanceof Dino && animal.species !== "Pigeon"
 			? animal.getRandomFact(human)
-			: animal.fact; // random for dinos, single for pigeon
-	image.setAttribute('src', `/images/${animal.species}.png`);
-	image.setAttribute('alt', animal.species);
+			: animal.fact;
+	image.setAttribute("src", `/images/${animal.species}.png`);
+	image.setAttribute("alt", animal.species);
 
-	tile.classList.add('grid-item');
+	tile.classList.add("grid-item");
 	tile.appendChild(name);
 	tile.appendChild(image);
 	if (animal instanceof Dino) {
-		tile.appendChild(fact); // do not append fact to human tile
+		tile.appendChild(fact);
 	}
 	grid.appendChild(tile);
 }
 
-form.addEventListener('submit', function (e) {
+form.addEventListener("submit", function (e) {
 	e.preventDefault();
 
 	// use IIFE to make human data ptivate
 	let humanData = (function () {
-		let name = document.getElementById('name').value;
-		let diet = document.getElementById('diet').value;
-		let weight = Number(document.getElementById('weight').value);
+		let name = document.getElementById("name").value;
+		let diet = document.getElementById("diet").value;
+		let weight = Number(document.getElementById("weight").value);
 		let height =
-			Number(document.getElementById('meters').value) +
-			0.01 * Number(document.getElementById('cm').value);
+			Number(document.getElementById("meters").value) +
+			0.01 * Number(document.getElementById("cm").value);
 
 		return {
 			name: name,
@@ -152,7 +157,7 @@ form.addEventListener('submit', function (e) {
 	toggleScreen();
 });
 
-backBtn.addEventListener('click', function () {
+backBtn.addEventListener("click", function () {
 	toggleScreen();
-	grid.innerHTML = '';
+	grid.innerHTML = "";
 });
